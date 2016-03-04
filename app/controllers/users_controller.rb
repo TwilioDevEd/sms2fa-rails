@@ -4,6 +4,7 @@ class UsersController < ApplicationController
     :last_name,
     :email,
     :phone_number,
+    :password_confirmation,
     :password
   ]
 
