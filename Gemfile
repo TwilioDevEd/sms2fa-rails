@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.5'
 gem 'pg'
+gem 'bcrypt', '~> 3.1.7'
 
 group :assets do
   gem 'sass-rails', '~> 5.0'
