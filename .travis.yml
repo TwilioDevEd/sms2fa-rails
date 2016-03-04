@@ -8,3 +8,6 @@ rvm:
 
 install:
   - bundle
+
+before_script:
+  - RAILS_ENV=test rake db:create db:migrate
