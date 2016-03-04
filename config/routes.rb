@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   resources :users, only: [:new, :create]
+  post 'phones', to: 'phones#activate'
 
   # Example resource route with options:
   #   resources :products do
