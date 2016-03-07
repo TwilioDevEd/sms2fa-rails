@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe UsersController do
+  render_views
   
   valid_user_attributes = {
     user: {
@@ -45,7 +46,7 @@ describe UsersController do
 
       post :create, valid_user_attributes
 
-      expect(response).to redirect_to(new_user_path)
+      expect(response.body).to match /\+1-555-5555/im
     end
     
     it "sends activation code to phone number" do
@@ -54,6 +55,27 @@ describe UsersController do
       expect(MessageSender).to receive(:send_code).with('+1-555-5555', '123456')
       
       post :create, valid_user_attributes
+    end
+  end
+
+  describe "#confirm" do
+    render_views
+    it "validates user with correct verification code" do
+      user = double("user", verification_code: '123456')
+      allow(User).to receive(:find).and_return(user)
+      
+      expect(user).to receive(:update)
+      
+      post :confirm, {user_id: 1, verification_code: user.verification_code}
+    end
+    it "redirects user to top secret content after successful validation" do
+      user = double("user", verification_code: '123456')
+      allow(User).to receive(:find).and_return(user)
+      allow(user).to receive(:update)
+           
+      post :confirm, {user_id: 1, verification_code: user.verification_code}
+
+      expect(response.body).to match /Top Secret Content/im
     end
   end
 end

@@ -1,3 +1,6 @@
+require 'code_generator'
+require 'message_sender'
+
 class UsersController < ApplicationController
   WHITELIST_ATTRIBUTES = [
     :first_name,
@@ -17,10 +20,18 @@ class UsersController < ApplicationController
     @user.verification_code = CodeGenerator.generate
     if @user.save
       MessageSender.send_code(@user.phone_number, @user.verification_code)
-      redirect_to new_user_path
+      render :confirmation
     else
       render :new
     end
+  end
+
+  def confirm
+    user = User.find params[:user_id]
+    if user.verification_code == params[:verification_code]
+      user.update(confirmed: true)
+    end
+    render :top_secret
   end
 
   private
