@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'code_generator'
 
 describe CodeGenerator do
   describe '#generate' do

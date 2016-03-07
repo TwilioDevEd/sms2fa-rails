@@ -1,6 +1,7 @@
 require 'rails_helper'
 require 'vcr'
 require 'vcr_helper'
+require 'message_sender'
 
 describe MessageSender do
   describe '#send_code' do
