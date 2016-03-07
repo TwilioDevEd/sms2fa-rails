@@ -68,6 +68,7 @@ describe UsersController do
       
       post :confirm, {user_id: 1, verification_code: user.verification_code}
     end
+
     it "redirects user to top secret content after successful validation" do
       user = double("user", verification_code: '123456')
       allow(User).to receive(:find).and_return(user)
@@ -76,6 +77,16 @@ describe UsersController do
       post :confirm, {user_id: 1, verification_code: user.verification_code}
 
       expect(response.body).to match /Top Secret Content/im
+    end
+
+    it "renders confirmation page if code doesnt match" do
+      user = double("user", verification_code: '123456', phone_number: '+55 123', id: 1)
+      allow(User).to receive(:find).and_return(user)
+      allow(user).to receive(:update)
+           
+      post :confirm, {user_id: 1, verification_code: '1337'}
+
+      expect(response.body).to match /please enter the 6-digits activation code/im
     end
   end
 end

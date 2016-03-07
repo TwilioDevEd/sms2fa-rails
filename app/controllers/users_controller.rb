@@ -27,11 +27,13 @@ class UsersController < ApplicationController
   end
 
   def confirm
-    user = User.find params[:user_id]
-    if user.verification_code == params[:verification_code]
-      user.update(confirmed: true)
+    @user = User.find params[:user_id]
+    if @user.verification_code == params[:verification_code]
+      @user.update(confirmed: true)
+      render :top_secret
+    else
+      render :confirmation
     end
-    render :top_secret
   end
 
   private
