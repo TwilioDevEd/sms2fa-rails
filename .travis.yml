@@ -11,3 +11,9 @@ install:
 
 before_script:
   - RAILS_ENV=test rake db:create db:migrate
+
+env:
+  global:
+    - TWILIO_ACCOUNT_SID=TWILIOACCOUNTSID0000
+    - TWILIO_AUTH_TOKEN=TWILIOAUTHTOKEN0000
+    - TWILIO_PHONE_NUMBER=TWILIOPHONENUMBER0000
