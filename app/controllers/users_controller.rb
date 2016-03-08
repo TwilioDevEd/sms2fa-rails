@@ -30,6 +30,7 @@ class UsersController < ApplicationController
     @user = User.find params[:user_id]
     if @user.verification_code == params[:verification_code]
       @user.update(confirmed: true)
+      session[:authenticated] = true
       render :top_secret
     else
       render :confirmation

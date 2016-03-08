@@ -69,6 +69,16 @@ describe UsersController do
       post :confirm, {user_id: 1, verification_code: user.verification_code}
     end
 
+    it "authenticates user if verification code matches" do
+      user = double("user", verification_code: '123456')
+      allow(User).to receive(:find).and_return(user)
+      allow(user).to receive(:update)
+           
+      post :confirm, {user_id: 1, verification_code: user.verification_code}
+
+      expect(session[:authenticated]).to be true
+    end
+
     it "redirects user to top secret content after successful validation" do
       user = double("user", verification_code: '123456')
       allow(User).to receive(:find).and_return(user)
