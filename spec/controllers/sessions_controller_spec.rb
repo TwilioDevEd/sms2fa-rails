@@ -6,7 +6,8 @@ describe SessionsController do
 
     it "persist user id in the session if password is right" do
       user = double("User", id: 123, password: "123", phone_number: "00000000")
-      allow(User).to receive(:find).with(email: "teste@example.com").and_return(user)
+      allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
+      allow(user).to receive(:authenticate).with('123').and_return(true)
 
       post :create, {email: "teste@example.com", password: "123"} 
 
@@ -15,7 +16,8 @@ describe SessionsController do
 
     it "redirects to the confirmation page" do
       user = double("User", id: 123, password: "123", phone_number: "00000000")
-      allow(User).to receive(:find).with(email: "teste@example.com").and_return(user)
+      allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
+      allow(user).to receive(:authenticate).with('123').and_return(true)
 
       post :create, {email: "teste@example.com", password: "123"} 
 

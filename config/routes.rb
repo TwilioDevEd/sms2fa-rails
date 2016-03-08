@@ -16,7 +16,8 @@ Rails.application.routes.draw do
   resources :users, only: [:new, :create]
   get 'secret_contents', to: 'secret_contents#show'
   post '/login', to: 'sessions#create'
-  post 'confirm', to: 'users#confirm'
+  post '/verify-code', to: 'users#confirm'
+  get '/signin', to: 'sessions#new'
 
   # Example resource route with options:
   #   resources :products do

@@ -4,7 +4,7 @@
 
 %p To complete your phone number verification, please enter the 6-digits activation code.
 
-= form_tag("confirm", method: "post")  do
+= form_tag("verify-code", method: "post")  do
   = label_tag :confirmation, "Confirmation"
   = text_field_tag :verification_code
   = hidden_field_tag :user_id, @user.id
