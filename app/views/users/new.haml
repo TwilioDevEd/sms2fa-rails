@@ -1,17 +1,33 @@
-%h1 Sign Up
+%h1 We're going to be best friends
 
-= form_for @user do |f|
-  = f.label :first_name, "First name"
-  = f.text_field :first_name
-  = f.label :last_name, "Last name"
-  = f.text_field :last_name
-  = f.label :email, "Email"
-  = f.text_field :email
-  = f.label :phone_number, "Phone number"
-  = f.text_field :phone_number
-  = f.label :password, "Password"
-  = f.password_field :password
-  = f.label :password_confirmation, "Confirm password"
-  = f.password_field :password_confirmation
-  = f.submit "Save"
+%p Thanks for your interest in signing up! Can you tell us a bit about yourself?
 
+= form_for @user, html: { class: "form-horizontal" } do |f|
+  .form-group
+    = f.label :first_name, "First name", class: "col-md-2 control-label"
+    .col-sm-10
+      = f.text_field :first_name, class: "form-control"
+  .form-group
+    = f.label :last_name, "Last name", class: "col-md-2 control-label"
+    .col-sm-10
+      = f.text_field :last_name, class: "form-control"
+  .form-group
+    = f.label :email, "Email", class: "col-md-2 control-label"
+    .col-sm-10
+      = f.text_field :email, class: "form-control"
+  .form-group
+    = f.label :phone_number, "Phone number", class: "col-md-2 control-label"
+    .col-sm-10
+      = f.text_field :phone_number, class: "form-control"
+  .form-group
+    = f.label :password, "Password", class: "col-md-2 control-label"
+    .col-sm-10
+      = f.password_field :password, class: "form-control"
+  .form-group
+    = f.label :password_confirmation, "Confirm password", class: "col-md-2 control-label"
+    .col-sm-10
+      = f.password_field :password_confirmation, class: "form-control"
+
+  .form-group
+    .col-sm-offset-2.col-sm-10
+      = f.submit "Save", class: "btn btn-success"

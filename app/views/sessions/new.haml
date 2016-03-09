@@ -1,6 +1,16 @@
-= form_tag("login", method: "post") do
-  = label_tag :email, "Email"
-  = text_field_tag :email
-  = label_tag :password, "Password"
-  = password_field_tag :password
-  = submit_tag "Confirm"
+%h1 Welcome back
+
+%p You never write. You never call. But we're glad you came, regardless! Be a pal and confirm your username and password, would you?
+
+= form_tag("login", method: "post", class: "form-horizontal") do
+  .form-group
+    = label_tag :email, "Email", class: "col-md-2 control-label"
+    .col-sm-10
+      = text_field_tag :email, nil, class: "form-control"
+  .form-group
+    = label_tag :password, "Password", class: "col-md-2 control-label"
+    .col-sm-10
+      = password_field_tag :email, nil, class: "form-control"
+  .form-group
+    .col-sm-offset-2.col-sm-10
+      = submit_tag "Confirm", class: "btn btn-success"

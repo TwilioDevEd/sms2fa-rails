@@ -1,0 +1,27 @@
+!!!
+%html
+  %head
+    %title SMS 2 Factor Authentication
+    %meta{name: 'viewport', content: 'width=device-width, initial-scale=1, user-scalable=no'}
+    = javascript_include_tag 'application'
+    = stylesheet_link_tag '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'
+    = stylesheet_link_tag '//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'
+    = stylesheet_link_tag 'application', media: 'all'
+    = csrf_meta_tags
+  %body
+    - if flash[:notice]
+      .alert.alert-success.alert-dismissible{ role: "alert" }
+        %button.close{ "data-dismiss" => "alert", "aria-label" => "Close"}
+          %span{ "aria-hidden" => "true"} &times;
+        =flash[:notice]
+
+    - if flash[:error]
+      .alert.alert-danger.alert-dismissible{ role: "alert" }
+        %button.close{ "data-dismiss" => "alert", "aria-label" => "Close"}
+          %span{ "aria-hidden" => "true"} &times;
+        =flash[:error]
+
+    .container
+      = yield
+
+    = javascript_include_tag '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'
