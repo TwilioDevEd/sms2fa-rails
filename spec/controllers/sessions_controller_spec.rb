@@ -5,19 +5,32 @@ describe SessionsController do
     render_views
 
     it "persist user id in the session if password is right" do
-      user = double("User", id: 123, password: "123", phone_number: "00000000")
+      user = double("User", id: 123, update: true, password: "123", phone_number: "00000000")
       allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
       allow(user).to receive(:authenticate).with('123').and_return(true)
+      allow(MessageSender).to receive(:send_code)
 
       post :create, {email: "teste@example.com", password: "123"} 
 
       expect(session[:user_id]).to be user.id
     end
 
-    it "redirects to the confirmation page" do
-      user = double("User", id: 123, password: "123", phone_number: "00000000")
+    it "send a new random code to confirm" do
+      user = double("User", id: 123, update: true, password: "123", phone_number: "00000000")
       allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
       allow(user).to receive(:authenticate).with('123').and_return(true)
+      allow(CodeGenerator).to receive(:generate).and_return('123456')
+      allow(MessageSender).to receive(:send_code)
+      
+      expect(MessageSender).to receive(:send_code).with('00000000', '123456')
+      post :create, {email: "teste@example.com", password: "123"} 
+    end
+
+    it "redirects to the confirmation page" do
+      user = double("User", id: 123, update: true, password: "123", phone_number: "00000000")
+      allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
+      allow(user).to receive(:authenticate).with('123').and_return(true)
+      allow(MessageSender).to receive(:send_code)
 
       post :create, {email: "teste@example.com", password: "123"} 
 

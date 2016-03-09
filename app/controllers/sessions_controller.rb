@@ -4,6 +4,10 @@ class SessionsController < ApplicationController
     if @user && @user.authenticate(params[:password])
       session[:user_id] = @user.id
       session[:authenticated] = false
+      verification_code = CodeGenerator.generate
+      @user.update(verification_code: verification_code) 
+      MessageSender.send_code(@user.phone_number, verification_code)
+
       render 'users/confirmation'
     else
       render :new
