@@ -32,6 +32,7 @@ class UsersController < ApplicationController
       session[:authenticated] = true
       render :top_secret
     else
+      flash[:error] = "Verification code is incorrect."
       render :confirmation
     end
   end

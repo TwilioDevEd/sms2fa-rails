@@ -9,6 +9,7 @@ class SessionsController < ApplicationController
       ConfirmationSender.send_confirmation_message_to @user
       render 'users/confirmation'
     else
+      flash[:error] = "Wrong user/password."
       render :new
     end
   end

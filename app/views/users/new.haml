@@ -2,6 +2,10 @@
 
 %p Thanks for your interest in signing up! Can you tell us a bit about yourself?
 
+
+- @user.errors.full_messages.each do |error|
+  %li= error
+
 = form_for @user, html: { class: "form-horizontal" } do |f|
   .form-group
     = f.label :first_name, "First name", class: "col-md-2 control-label"
