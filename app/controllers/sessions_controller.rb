@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
       session[:authenticated] = false
       render 'users/confirmation'
     else
-      render nothing: true
+      render :new
     end
   end
 
