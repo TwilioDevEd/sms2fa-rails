@@ -1,5 +1,5 @@
-class CodeGenerator
+module CodeGenerator
   def self.generate
-    '123456'
+    rand(100000...999999).to_s
   end
 end
