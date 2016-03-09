@@ -17,9 +17,8 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    @user.verification_code = CodeGenerator.generate
     if @user.save
-      MessageSender.send_code(@user.phone_number, @user.verification_code)
+      ConfirmationSender.send_confirmation_message_to(@user)
       render :confirmation
     else
       render :new
