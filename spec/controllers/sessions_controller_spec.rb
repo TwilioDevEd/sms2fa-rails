@@ -47,4 +47,12 @@ describe SessionsController do
       expect(response.body).to match(/email/mi)
     end
   end
+
+  describe "#destroy" do
+    it "logs a user out" do
+      get :destroy, nil, {user_id: 123, authenticated: true}
+      expect(session[:user_id]).to be nil
+      expect(session[:authenticated]).to be nil
+    end
+  end
 end
