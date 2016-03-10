@@ -27,7 +27,7 @@ class UsersController < ApplicationController
     if @user.verification_code == params[:verification_code]
       @user.update(confirmed: true)
       session[:authenticated] = true
-      render :top_secret
+      redirect_to secrets_path
     else
       flash[:error] = "Verification code is incorrect."
       render :confirmation

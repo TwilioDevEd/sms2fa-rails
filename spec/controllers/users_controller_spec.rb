@@ -72,8 +72,8 @@ describe UsersController do
         expect(session[:authenticated]).to be_truthy
       end
 
-      it 'renders top secret template' do
-        expect(response).to render_template(:top_secret)
+      it 'redirects to secrets_path' do
+        expect(response).to redirect_to(secrets_path)
       end
     end
 

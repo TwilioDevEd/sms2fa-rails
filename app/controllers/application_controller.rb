@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
   def signed_in?
     User.find(session[:user_id]) && session[:authenticated]
   end
-  
+
   def authenticate!
-    redirect_to 'login' and return unless signed_in?
+    redirect_to login_path and return unless signed_in?
   end
 end
