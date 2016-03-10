@@ -34,12 +34,12 @@ This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
    a Mac, I recommend [Postgres.app](http://postgresapp.com)_.
 
    ```
-   rake db:setup
+   bundle exec rake db:setup
    ```
 
 1. Make sure the tests succeed:
    ```
-   rspec
+   bundle exec rspec
    ```
 
 1. Run the server:
