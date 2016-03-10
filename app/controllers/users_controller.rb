@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       session[:user_id] = @user.id
-      ConfirmationSender.send_confirmation_message_to(@user)
+      ConfirmationSender.send_confirmation_to(@user)
       redirect_to new_confirmation_path
     else
       render :new

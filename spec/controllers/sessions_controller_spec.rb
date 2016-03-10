@@ -7,7 +7,7 @@ describe SessionsController do
     context 'when credentials are correct' do
       before do
         allow(ConfirmationSender)
-          .to receive(:send_confirmation_message_to)
+          .to receive(:send_confirmation_to)
           .with(user)
 
         post :create, { email: user.email, password: user.password }
@@ -19,7 +19,7 @@ describe SessionsController do
 
       it 'send a code to confirm' do
         expect(ConfirmationSender)
-          .to have_received(:send_confirmation_message_to)
+          .to have_received(:send_confirmation_to)
           .with(user)
           .once
       end
@@ -32,7 +32,7 @@ describe SessionsController do
     context 'when credentials are incorrect' do
       it 'renders new template' do
         allow(ConfirmationSender)
-          .to receive(:send_confirmation_message_to)
+          .to receive(:send_confirmation_to)
           .with(user)
 
         post :create, { email: user.email, password: 'wrong_password' }

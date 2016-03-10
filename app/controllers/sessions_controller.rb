@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     if @user && @user.authenticate(params[:password])
       session[:user_id] = @user.id
       session[:authenticated] = false
-      ConfirmationSender.send_confirmation_message_to @user
+      ConfirmationSender.send_confirmation_to @user
 
       redirect_to new_confirmation_path
     else

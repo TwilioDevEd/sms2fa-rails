@@ -17,7 +17,7 @@ describe UsersController do
   describe "#create" do
     context 'when required information is complete' do
       before do
-        allow(ConfirmationSender).to receive(:send_confirmation_message_to)
+        allow(ConfirmationSender).to receive(:send_confirmation_to)
         post :create, user: attributes_for(:user)
       end
 
@@ -35,7 +35,7 @@ describe UsersController do
 
       it 'sends confirmation message to the user' do
         expect(ConfirmationSender)
-          .to have_received(:send_confirmation_message_to)
+          .to have_received(:send_confirmation_to)
           .once
       end
     end
