@@ -1,102 +1,99 @@
 require 'rails_helper'
+require_relative '../../lib/confirmation_sender'
 
 describe UsersController do
-  render_views
-  
-  valid_user_attributes = {
-    user: {
-      first_name: 'bob',
-      last_name: 'martin',
-      email: 'bob@martin.com',
-      phone_number: '+1-555-5555',
-      password: 'very-secret-password'
-    }
-  }
-
   describe "#new" do
-    it "renders new" do
+    it "renders new template" do
       get :new
       expect(response).to render_template(:new)
     end
 
     it "assings an instance of User" do
       get :new
-      expect(assigns(:user)).to be_an_instance_of(User)
+      expect(assigns[:user]).to be_an_instance_of(User)
     end
   end
 
   describe "#create" do
-    it "renders new when user is not saved" do
-      user_attributes = {
-        user: {
-          last_name: 'martin',
-          email: 'bob@martin.com',
-          phone_number: '+1-555-5555',
-          password: 'very-secret-password'
-        }
-      }
+    context 'when required information is complete' do
+      before do
+        allow(ConfirmationSender).to receive(:send_confirmation_message_to)
+        post :create, user: attributes_for(:user)
+      end
 
-      post :create, user_attributes
+      it 'creates a user' do
+        expect(User.count).to eq(1)
+      end
 
-      expect(response).to render_template(:new)
+      it 'renders confirmation' do
+        expect(response).to render_template(:confirmation)
+      end
+
+      it 'sends confirmation message to the user' do
+        expect(ConfirmationSender)
+          .to have_received(:send_confirmation_message_to)
+          .once
+      end
     end
 
-    it "redirects to verify_phone_path when user is saved" do
-      allow(MessageSender).to receive(:send_code)
+    context 'when required information is incomplete' do
+      before do
+        post :create, user: attributes_for(:user).except(:email)
+      end
 
-      post :create, valid_user_attributes
+      it 'do not create a user' do
+        expect(User.count).to eq(0)
+      end
 
-      expect(response.body).to match /\+1-555-5555/im
-    end
-    
-    it "sends activation code to phone number" do
-      allow(CodeGenerator).to receive(:generate).and_return('123456')
-      
-      expect(MessageSender).to receive(:send_code).with('+1-555-5555', '123456')
-      
-      post :create, valid_user_attributes
+      it 'renders new template' do
+        expect(response).to render_template(:new)
+      end
     end
   end
 
   describe "#confirm" do
-    render_views
-    it "validates user with correct verification code" do
-      user = double("user", verification_code: '123456')
-      allow(User).to receive(:find).and_return(user)
-      
-      expect(user).to receive(:update)
-      
-      post :confirm, {user_id: 1, verification_code: user.verification_code}
+    let(:user) { create(:user, verification_code: '110294') }
+
+    context 'when verification code is correct' do
+      before do
+        confirm_params = {
+          user_id: user.id,
+          verification_code: user.verification_code
+        }
+
+        post :confirm, confirm_params
+      end
+
+      it 'updates confirmed to true' do
+        expect(User.last.confirmed).to be_truthy
+      end
+
+      it 'authenticates the user' do
+        expect(session[:authenticated]).to be_truthy
+      end
+
+      it 'renders top secret template' do
+        expect(response).to render_template(:top_secret)
+      end
     end
 
-    it "authenticates user if verification code matches" do
-      user = double("user", verification_code: '123456')
-      allow(User).to receive(:find).and_return(user)
-      allow(user).to receive(:update)
-           
-      post :confirm, {user_id: 1, verification_code: user.verification_code}
+    context 'when verification code is incorrect' do
+      before do
+        confirm_params = {
+          user_id: user.id,
+          verification_code: '000000'
+        }
 
-      expect(session[:authenticated]).to be true
-    end
+        post :confirm, confirm_params
+      end
 
-    it "redirects user to top secret content after successful validation" do
-      user = double("user", verification_code: '123456')
-      allow(User).to receive(:find).and_return(user)
-      allow(user).to receive(:update)
-           
-      post :confirm, {user_id: 1, verification_code: user.verification_code}
+      it 'does not change confirmed' do
+        expect(User.last.confirmed).to be_falsey
+      end
 
-      expect(response.body).to match /Top Secret Content/im
-    end
-
-    it "renders confirmation page if code doesnt match" do
-      user = double("user", verification_code: '123456', phone_number: '+55 123', id: 1)
-      allow(User).to receive(:find).and_return(user)
-      allow(user).to receive(:update)
-           
-      post :confirm, {user_id: 1, verification_code: '1337'}
-
-      expect(response.body).to match /please enter the 6-digits activation code/im
+      it 'renders confirmation template' do
+        expect(response).to render_template(:confirmation)
+      end
     end
   end
 end

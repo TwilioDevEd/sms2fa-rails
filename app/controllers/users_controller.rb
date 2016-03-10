@@ -1,8 +1,5 @@
-require 'code_generator'
-require 'message_sender'
-
 class UsersController < ApplicationController
-  WHITELIST_ATTRIBUTES = [
+  ATTRIBUTE_WHITELIST = [
     :first_name,
     :last_name,
     :email,
@@ -40,6 +37,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(*WHITELIST_ATTRIBUTES)
+    params.require(:user).permit(*ATTRIBUTE_WHITELIST)
   end
 end
