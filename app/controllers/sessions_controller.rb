@@ -1,5 +1,3 @@
-require 'confirmation_sender'
-
 class SessionsController < ApplicationController
   def new
   end
