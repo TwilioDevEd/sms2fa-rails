@@ -1,6 +1,9 @@
 require 'confirmation_sender'
 
 class SessionsController < ApplicationController
+  def new
+  end
+
   def create
     @user = User.find_by(email: params[:email])
     if @user && @user.authenticate(params[:password])
@@ -12,9 +15,6 @@ class SessionsController < ApplicationController
       flash[:error] = "Wrong user/password."
       render :new
     end
-  end
-
-  def new
   end
 
   def destroy
