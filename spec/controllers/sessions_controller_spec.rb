@@ -24,8 +24,8 @@ describe SessionsController do
           .once
       end
 
-      it 'renders confirmation template' do
-        expect(response).to render_template('users/confirmation')
+      it 'redirects to new_confirmation_path' do
+        expect(response).to redirect_to(new_confirmation_path)
       end
     end
 

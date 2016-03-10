@@ -25,8 +25,12 @@ describe UsersController do
         expect(User.count).to eq(1)
       end
 
-      it 'renders confirmation' do
-        expect(response).to render_template(:confirmation)
+      it 'stores user_id in session' do
+        expect(session[:user_id]).to eq(User.last.id)
+      end
+
+      it 'redirects to new_confirmation_path' do
+        expect(response).to redirect_to(new_confirmation_path)
       end
 
       it 'sends confirmation message to the user' do
@@ -47,52 +51,6 @@ describe UsersController do
 
       it 'renders new template' do
         expect(response).to render_template(:new)
-      end
-    end
-  end
-
-  describe "#confirm" do
-    let(:user) { create(:user, verification_code: '110294') }
-
-    context 'when verification code is correct' do
-      before do
-        confirm_params = {
-          user_id: user.id,
-          verification_code: user.verification_code
-        }
-
-        post :confirm, confirm_params
-      end
-
-      it 'updates confirmed to true' do
-        expect(User.last.confirmed).to be_truthy
-      end
-
-      it 'authenticates the user' do
-        expect(session[:authenticated]).to be_truthy
-      end
-
-      it 'redirects to secrets_path' do
-        expect(response).to redirect_to(secrets_path)
-      end
-    end
-
-    context 'when verification code is incorrect' do
-      before do
-        confirm_params = {
-          user_id: user.id,
-          verification_code: '000000'
-        }
-
-        post :confirm, confirm_params
-      end
-
-      it 'does not change confirmed' do
-        expect(User.last.confirmed).to be_falsey
-      end
-
-      it 'renders confirmation template' do
-        expect(response).to render_template(:confirmation)
       end
     end
   end

@@ -8,7 +8,8 @@ class SessionsController < ApplicationController
       session[:user_id] = @user.id
       session[:authenticated] = false
       ConfirmationSender.send_confirmation_message_to @user
-      render 'users/confirmation'
+
+      redirect_to new_confirmation_path
     else
       flash[:error] = "Wrong user/password."
       render :new
