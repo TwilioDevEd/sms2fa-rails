@@ -8,19 +8,21 @@ SMS Two Factor Authentication implementation with Ruby on Rails and Twilio
 
 This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
 
-1. First clone this repository and `cd` into its directory.
+1. First clone this repository and `cd` into it
 
    ```
    git clone git@github.com:TwilioDevEd/sms2fa-rails.git
    cd sms2fa-rails
    ```
 
-1. Install the dependencies:
+1. Install the dependencies
+
    ```
    bundle
    ```
 
-1. Export the environment variables:
+1. Export the environment variables
+
    You can find the `AccountSID` and the `AuthToken` at https://www.twilio.com/user/account/settings.
    ```
    export TWILIO_ACCOUNT_SID=Your Twilio Account SID
@@ -28,7 +30,7 @@ This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
    export TWILIO_NUMBER=Your Twilio Phone Number
    ```
 
-1. Create database and run migrations:
+1. Create database and run migrations
 
    _Make sure you have installed [PostgreSQL](http://www.postgresql.org/). If on
    a Mac, I recommend [Postgres.app](http://postgresapp.com)_.
@@ -37,12 +39,14 @@ This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
    bundle exec rake db:setup
    ```
 
-1. Make sure the tests succeed:
+1. Make sure the tests succeed
+
    ```
    bundle exec rspec
    ```
 
-1. Run the server:
+1. Run the server
+
    ```
    rails s
    ```
