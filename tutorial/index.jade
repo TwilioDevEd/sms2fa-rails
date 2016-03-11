@@ -1,0 +1,94 @@
+.chapter(data-title='Two Factor Authentication with Rails and Twilio')
+  .step(
+    data-title='Introduction: Security',
+    data-file='app/models/user.rb')
+    :markdown
+     ## Security
+
+     Security is a main concern for an application these days. On this tutorial we'll show how to use Twilio API to build a “[Two Factor Authentication](https://en.wikipedia.org/wiki/Two-factor_authentication)” System.
+
+  .step(
+    data-title='What does this thing do?',
+    data-file='app/models/user.rb')
+    :markdown
+     ## What does this thing do?
+
+     This Ruby on Rails application demonstrates how to use Twilio API to implement a Two-factor authentication process. This process should improve user identity validation accuracy by ensuring user's ownership of a device along with a password.
+
+  .step(
+    data-title='Create a new user',
+    data-file='app/models/user.rb')
+    :markdown
+      ## Create a new user
+
+      The first thing we’ll need to do is create the user that will be authenticated within the system. To model that we create a `User` model. It will keep information such as:
+
+      * password
+      * email that will be used as identifier
+      * phone number that will be used to validate its authenticity
+      * boolean to check if phone number was already verified
+
+  .step(
+    data-title='Configuring Twilio Client',
+    data-file='lib/message_sender.rb')
+    :markdown
+      ## Configuring Twilio Client
+
+      To send the confirmation SMS we need to create a Twilio REST API client that can be used to send SMS and MMS messages. The client requires your Twilio account credentials (an account SID and auth token), which can be found in the account portal.
+
+      Next all we need to do is call `messages.create` on the client object in order to send our message. The Twilio Message API call requires a 'From' and 'To' parameter, and either a 'Body' or a 'MediaUrl' attribute (or both).
+
+      These nine lines of code are all you need to send an SMS in Rails.
+
+  .step(
+    data-title='Sending Verification Code',
+    data-file='app/controllers/users_controller.rb'
+    data-highlight='15-24')
+    :markdown
+      ## Sending Verification Code
+
+      The controller will send a 6-digit random code to the user's phone.  He will need to use it to confirm that the provided phone number is correct. Since at this point, we don’t have that confirmation yet, we create the user but we don’t perform its authentication at that moment. We just redirect him to the page where he’ll be able to input the validation code.
+
+  .step(
+    data-title='Confirm phone number',
+    data-file='app/controllers/confirmations_controller.rb'
+    data-highlight='6-18')
+    :markdown
+      ## Sending Verification Code
+
+      After the user has input the validation code, the system will validate it against the one persisted for the respective `User` and update his confirmed field to `true`. After that we set the user’s authenticated session attribute to `true` and redirect him to the secret content.
+
+  .step(
+    data-title='Sign in with your new user',
+    data-file='app/controllers/sessions_controller.rb'
+    data-highlight='5-17')
+    :markdown
+      ## Sign in with your new user
+
+      On the _sign in_ page we call `@user.authenticate(params[:password])` to ask bcrypt to hash and validate the provided password against the persisted one.
+      Since we haven’t finish the authentication process yet, we create this session with `session[:authenticated] = false` to flag this user session.
+      Last step is to send a confirmation code over SMS and redirect to code confirmation page.
+
+  .step(
+    data-title='Verify phone ownership',
+    data-file='app/controllers/users_controller.rb'
+    data-highlight='15-24')
+    :markdown
+      ## Verify phone ownership
+
+      After sending the code, we need to make sure that user receives it correctly and has his phone. We then ask him to input the code and validate against the given one, which is a copy of what we have just sent.
+
+  .step(
+    data-title='Ensuring that content requires authentication',
+    data-file='app/controllers/application_controller.rb'
+    data-highlight='6-12')
+    :markdown
+      ## Ensuring that content requires authentication
+
+      In order to ensure that a user provided both factors (password and verification code) we check the session for `:user_id` and `:authenticated` attributes. This is done through password matching and SMS authentication. 
+
+      We added a `before_action` on the controller responsible for rendering authenticated content and that will guarantee that user is authorized for every request.
+
+  .step
+    :markdown
+      ## Where to next?
