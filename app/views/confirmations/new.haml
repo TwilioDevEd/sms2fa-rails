@@ -4,9 +4,6 @@
 
 %p To complete your phone number verification, please enter the 6-digits activation code.
 
-- flash.each do |name, message|
-  = message
-
 = form_tag(confirmations_path, method: "post", class: "form-horizontal")  do
   .form-group
     = label_tag :verification_code, "Verification code", class: "col-md-2 control-label"

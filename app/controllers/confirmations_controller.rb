@@ -8,9 +8,11 @@ class ConfirmationsController < ApplicationController
     if @user.verification_code == params[:verification_code]
       @user.confirm!
       session[:authenticated] = true
+
+      flash[:notice] = "Welcome #{@user.first_name}. The Adventure Begins!"
       redirect_to secrets_path
     else
-      flash[:error] = "Verification code is incorrect."
+      flash.now[:error] = "Verification code is incorrect."
       render :new
     end
   end
