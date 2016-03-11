@@ -11,6 +11,11 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :email
 
+  def confirm!
+    self.confirmed = true
+    save!
+  end
+
   def pretty_phone_number
     phone_number.phony_formatted(format: :international, spaces: ' ')
   end

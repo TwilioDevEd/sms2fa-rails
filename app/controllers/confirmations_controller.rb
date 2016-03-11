@@ -6,7 +6,7 @@ class ConfirmationsController < ApplicationController
   def create
     @user = User.find params[:user_id]
     if @user.verification_code == params[:verification_code]
-      @user.update(confirmed: true)
+      @user.confirm!
       session[:authenticated] = true
       redirect_to secrets_path
     else

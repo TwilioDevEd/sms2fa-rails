@@ -10,6 +10,15 @@ describe User do
     expect(user.errors[:email]).to include("has already been taken")
   end
 
+  describe '#confirm!' do
+    it 'sets confirmed to true' do
+      user = create(:user)
+      expect do
+        user.confirm!
+      end.to change{ user.confirmed }.from(false).to(true)
+    end
+  end
+
   describe '#pretty_phone_number' do
     it 'formats the phone number' do
       user = create(:user)
