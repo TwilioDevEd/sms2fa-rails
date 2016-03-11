@@ -1,15 +1,14 @@
 require 'rails_helper'
-require_relative '../../lib/confirmation_sender'
 
 describe UsersController do
   describe "#new" do
+    before { get :new }
+
     it "renders new template" do
-      get :new
       expect(response).to render_template(:new)
     end
 
     it "assings an instance of User" do
-      get :new
       expect(assigns[:user]).to be_an_instance_of(User)
     end
   end
