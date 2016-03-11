@@ -3,6 +3,7 @@
 SMS Two Factor Authentication implementation with Ruby on Rails and Twilio
 
 [![Build Status](https://travis-ci.org/TwilioDevEd/sms2fa-rails.svg?branch=master)](https://travis-ci.org/TwilioDevEd/sms2fa-rails)
+[![Coverage Status](https://coveralls.io/repos/github/TwilioDevEd/sms2fa-rails/badge.svg?branch=master)](https://coveralls.io/github/TwilioDevEd/sms2fa-rails?branch=master)
 
 ## Local Development
 
