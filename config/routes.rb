@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   resources :secrets, only: [:index]
 
   get '/logout', to: 'sessions#destroy'
+
+  root 'home#index'
 end
