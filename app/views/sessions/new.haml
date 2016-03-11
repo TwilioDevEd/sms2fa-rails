@@ -5,7 +5,7 @@
 - flash.each do |name, message|
   = message
 
-= form_tag("login", method: "post", class: "form-horizontal") do
+= form_tag(sessions_path, method: "post", class: "form-horizontal") do
   .form-group
     = label_tag :email, "Email", class: "col-md-2 control-label"
     .col-sm-10

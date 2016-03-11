@@ -7,8 +7,12 @@
 - flash.each do |name, message|
   = message
 
-= form_tag("verify-code", method: "post")  do
-  = label_tag :confirmation, "Confirmation"
-  = text_field_tag :verification_code
-  = hidden_field_tag :user_id, @user.id
-  = submit_tag "Confirm"
+= form_tag(confirmations_path, method: "post", class: "form-horizontal")  do
+  .form-group
+    = label_tag :verification_code, "Verification code", class: "col-md-2 control-label"
+    .col-sm-10
+      = text_field_tag :verification_code, nil, class: "form-control"
+      = hidden_field_tag :user_id, @user.id
+  .form-group
+    .col-sm-offset-2.col-sm-10
+      = submit_tag "Confirm", class: "btn btn-success"
