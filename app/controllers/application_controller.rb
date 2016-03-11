@@ -8,6 +8,6 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate!
-    redirect_to login_path and return unless signed_in?
+    redirect_to new_session_path and return unless signed_in?
   end
 end

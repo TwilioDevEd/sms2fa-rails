@@ -1,4 +1,4 @@
-class ConfirmationController < ApplicationController
+class ConfirmationsController < ApplicationController
   def new
     @user = User.find(session[:user_id])
   end

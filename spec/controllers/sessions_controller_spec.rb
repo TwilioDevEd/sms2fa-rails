@@ -43,8 +43,8 @@ describe SessionsController do
   end
 
   describe "#destroy" do
-    it "destroy the sessions" do
-      get :destroy, nil, { user_id: 404, authenticated: true  }
+    it "destroys the session" do
+      get :destroy, nil, { user_id: 404, authenticated: true }
 
       expect(session[:user_id]).to be nil
       expect(session[:authenticated]).to be nil

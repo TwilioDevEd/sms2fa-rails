@@ -12,9 +12,9 @@ describe SecretsController do
     end
 
     context 'when user is not authenticated' do
-      it 'redirects to login_path' do
+      it 'redirects to new_session_path' do
         get :index, nil, { user_id: user.id, authenticated: false }
-        expect(response).to redirect_to(login_path)
+        expect(response).to redirect_to(new_session_path)
       end
     end
   end

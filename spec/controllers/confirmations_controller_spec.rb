@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ConfirmationController do
+describe ConfirmationsController do
   let(:user) { create(:user, verification_code: '110294') }
 
   describe '#new' do
