@@ -1,8 +1,5 @@
-require 'code_generator'
-require 'message_sender'
-
 class UsersController < ApplicationController
-  WHITELIST_ATTRIBUTES = [
+  ATTRIBUTE_WHITELIST = [
     :first_name,
     :last_name,
     :email,
@@ -18,28 +15,17 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      ConfirmationSender.send_confirmation_message_to(@user)
-      render :confirmation
+      session[:user_id] = @user.id
+      ConfirmationSender.send_confirmation_to(@user)
+      redirect_to new_confirmation_path
     else
       render :new
-    end
-  end
-
-  def confirm
-    @user = User.find params[:user_id]
-    if @user.verification_code == params[:verification_code]
-      @user.update(confirmed: true)
-      session[:authenticated] = true
-      render :top_secret
-    else
-      flash[:error] = "Verification code is incorrect."
-      render :confirmation
     end
   end
 
   private
 
   def user_params
-    params.require(:user).permit(*WHITELIST_ATTRIBUTES)
+    params.require(:user).permit(*ATTRIBUTE_WHITELIST)
   end
 end

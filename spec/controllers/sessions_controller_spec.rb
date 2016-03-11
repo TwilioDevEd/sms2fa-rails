@@ -2,55 +2,50 @@ require 'rails_helper'
 
 describe SessionsController do
   describe "#create" do
-    render_views
+    let(:user) { create(:user) }
 
-    it "persist user id in the session if password is right" do
-      user = double("User", id: 123, update: true, password: "123", phone_number: "00000000")
-      allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
-      allow(user).to receive(:authenticate).with('123').and_return(true)
-      allow(MessageSender).to receive(:send_code)
+    context 'when credentials are correct' do
+      before do
+        allow(ConfirmationSender)
+          .to receive(:send_confirmation_to)
+          .with(user)
 
-      post :create, {email: "teste@example.com", password: "123"} 
+        post :create, { email: user.email, password: user.password }
+      end
 
-      expect(session[:user_id]).to be user.id
+      it 'creates a user' do
+        expect(session[:user_id]).to be user.id
+      end
+
+      it 'send a code to confirm' do
+        expect(ConfirmationSender)
+          .to have_received(:send_confirmation_to)
+          .with(user)
+          .once
+      end
+
+      it 'redirects to new_confirmation_path' do
+        expect(response).to redirect_to(new_confirmation_path)
+      end
     end
 
-    it "send a new random code to confirm" do
-      user = double("User", id: 123, update: true, password: "123", phone_number: "00000000")
-      allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
-      allow(user).to receive(:authenticate).with('123').and_return(true)
-      allow(CodeGenerator).to receive(:generate).and_return('123456')
-      allow(MessageSender).to receive(:send_code)
-      
-      expect(MessageSender).to receive(:send_code).with('00000000', '123456')
-      post :create, {email: "teste@example.com", password: "123"} 
-    end
+    context 'when credentials are incorrect' do
+      it 'renders new template' do
+        allow(ConfirmationSender)
+          .to receive(:send_confirmation_to)
+          .with(user)
 
-    it "redirects to the confirmation page" do
-      user = double("User", id: 123, update: true, password: "123", phone_number: "00000000")
-      allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
-      allow(user).to receive(:authenticate).with('123').and_return(true)
-      allow(MessageSender).to receive(:send_code)
+        post :create, { email: user.email, password: 'wrong_password' }
 
-      post :create, {email: "teste@example.com", password: "123"} 
-
-      expect(response.body).to match(/enter the 6-digits activation code/mi)
-    end
-
-    it "redirects to the login page if user/password is not correct" do
-      user = double("User", id: 123, phone_number: "00000000")
-      allow(User).to receive(:find_by).with(email: "teste@example.com").and_return(user)
-      allow(user).to receive(:authenticate).with('456').and_return(false)
-
-      post :create, {email: "teste@example.com", password: "456"} 
-
-      expect(response.body).to match(/email/mi)
+        expect(response).to render_template(:new)
+      end
     end
   end
 
   describe "#destroy" do
-    it "logs a user out" do
-      get :destroy, nil, {user_id: 123, authenticated: true}
+    it "destroys the session" do
+      get :destroy, nil, { user_id: 404, authenticated: true }
+
       expect(session[:user_id]).to be nil
       expect(session[:authenticated]).to be nil
     end
