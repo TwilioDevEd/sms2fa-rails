@@ -16,3 +16,7 @@
 .field_with_errors {
   color: red;
 }
+
+body {
+  padding-top:50px;
+}
