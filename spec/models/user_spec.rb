@@ -1,17 +1,20 @@
+require 'rails_helper'
+
 describe User do
-    it "doesnt allow duplicated email addresses" do
-        valid_user_attributes = {
-            first_name: 'bob',
-            last_name: 'martin',
-            email: 'bob@martin.com',
-            phone_number: '+1-555-5555',
-            password: 'very-secret-password'
-        }
-        User.create(valid_user_attributes)
-        user = User.new(first_name: 'Bob', last_name: 'Jobs', email: 'bob@martin.com', password: 'another-bob')
+  it "does not allow duplicate email addresses" do
+    create(:user, email: 'bob@example.com')
 
-        user.valid?
+    user = build(:user, email: 'bob@example.com')
+    user.valid?
 
-        expect(user.errors[:email]).to include("has already been taken")
+    expect(user.errors[:email]).to include("has already been taken")
+  end
+
+  describe '#pretty_phone_number' do
+    it 'formats the phone number' do
+      user = create(:user)
+      expect(user.phone_number).to eq('+12025550131')
+      expect(user.pretty_phone_number).to eq('+1 (202) 555-0131')
     end
+  end
 end
