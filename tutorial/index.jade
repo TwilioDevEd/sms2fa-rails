@@ -54,9 +54,11 @@
     data-file='app/controllers/confirmations_controller.rb'
     data-highlight='6-18')
     :markdown
-      ## Sending Verification Code
+      ## Confirm phone number
 
-      After the user has input the validation code, the system will validate it against the one persisted for the respective `User` and update his confirmed field to `true`. After that we set the user’s authenticated session attribute to `true` and redirect him to the secret content.
+      After the user has input the validation code, the system will check if the verification code provided by the user matches the one 
+      that we have persisted. In the cases where it matches, we'll confirm the phone number using `user#confirm!`. After that we set the 
+      user’s authenticated session attribute to `true` and redirect him to the secret content.
 
   .step(
     data-title='Sign in with your new user',
