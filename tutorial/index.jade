@@ -67,18 +67,20 @@
     :markdown
       ## Sign in with your new user
 
-      On the _sign in_ page we call `@user.authenticate(params[:password])` to ask bcrypt to hash and validate the provided password against the persisted one.
-      Since we haven’t finish the authentication process yet, we create this session with `session[:authenticated] = false` to flag this user session.
+      On the _sign in_ page we call `@user.authenticate(params[:password])` to ask bcrypt to hash and validate the provided password against 
+      the persisted one. Since we haven’t finish the authentication process yet, we set `session[:authenticated] = false` to flag that
+      this user is not authenticated yet.
       Last step is to send a confirmation code over SMS and redirect to code confirmation page.
 
   .step(
     data-title='Verify phone ownership',
-    data-file='app/controllers/users_controller.rb'
-    data-highlight='15-24')
+    data-file='app/controllers/confirmations_controller.rb'
+    data-highlight='6-18')
     :markdown
       ## Verify phone ownership
 
-      After sending the code, we need to make sure that user receives it correctly and has his phone. We then ask him to input the code and validate against the given one, which is a copy of what we have just sent.
+      After sending the code, we need to make sure that user received it correctly and has his phone. We then ask him to input the code 
+      and validate against the given one, which is a copy of what we have just sent.
 
   .step(
     data-title='Ensuring that content requires authentication',
