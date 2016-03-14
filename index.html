@@ -25,6 +25,11 @@
 <p>To send the confirmation SMS we need to create a Twilio REST API client that can be used to send SMS and MMS messages. The client requires your Twilio account credentials (an account SID and auth token), which can be found in the account portal.</p>
 <p>Next all we need to do is call <code>messages.create</code> on the client object in order to send our message. The Twilio Message API call requires a &#39;From&#39; and &#39;To&#39; parameter, and either a &#39;Body&#39; or a &#39;MediaUrl&#39; attribute (or both).</p>
 <p>These nine lines of code are all you need to send an SMS in Rails.</p>
+<p><strong>See Also:</strong></p>
+<ul>
+<li><a href="//www.twilio.com/docs/quickstart/ruby/sms/sending-via-rest">Twilio SMS and MMS Quickstart</a></li>
+<li><a href="//dockyard.com/blog/ruby/2012/02/14/love-your-lib-directory">Using the &quot;lib&quot; directory in Rails</a></li>
+</ul>
 </div><div data-title="Sending Verification Code" data-file="app/controllers/users_controller.rb" data-highlight="15-24" class="step"><h2 id="sending-verification-code">Sending Verification Code</h2>
 <p>The controller will send a 6-digit random code to the user&#39;s phone.  He will need to use it to confirm that the provided phone number is correct. Since at this point, we don’t have that confirmation yet, we create the user but we don’t perform its authentication at that moment. We just redirect him to the page where he’ll be able to input the validation code.</p>
 </div><div data-title="Confirm phone number" data-file="app/controllers/confirmations_controller.rb" data-highlight="6-18" class="step"><h2 id="confirm-phone-number">Confirm phone number</h2>
