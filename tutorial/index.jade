@@ -89,7 +89,8 @@
     :markdown
       ## Ensuring that content requires authentication
 
-      In order to ensure that a user provided both factors (password and verification code) we check the session for `:user_id` and `:authenticated` attributes. This is done through password matching and SMS authentication. 
+      In order to ensure that a user provided both factors (password and verification code) we check the session for `:user_id` and 
+      `:authenticated` attributes. These session attributes are set during the password matchind and the SMS authentication processes.
 
       We added a `before_action` on the controller responsible for rendering authenticated content and that will guarantee that user is authorized for every request.
 
