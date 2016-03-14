@@ -38,7 +38,7 @@
 
       Next all we need to do is call `messages.create` on the client object in order to send our message. The Twilio Message API call requires a 'From' and 'To' parameter, and either a 'Body' or a 'MediaUrl' attribute (or both).
 
-      These nine lines of code are all you need to send an SMS in Rails.
+      These few lines of code are all you need to send an SMS in Rails.
 
       **See Also:**
         * [Twilio SMS and MMS Quickstart](//www.twilio.com/docs/quickstart/ruby/sms/sending-via-rest)
@@ -51,7 +51,10 @@
     :markdown
       ## Sending Verification Code
 
-      The controller will send a 6-digit random code to the user's phone.  He will need to use it to confirm that the provided phone number is correct. Since at this point, we don’t have that confirmation yet, we create the user but we don’t perform its authentication at that moment. We just redirect him to the page where he’ll be able to input the validation code.
+      In the controller's `create`method, `ConfirmationSender.send_confirmation_to` will send a 6-digit random code to the user's phone.  
+      He will need to use it to confirm that the provided phone number is correct. Since at this point, we don’t have that confirmation yet, 
+      we create the user but we don’t perform its authentication at that moment. We just redirect him to the page where he’ll be able to 
+      input the validation code.
 
   .step(
     data-title='Confirm phone number',
@@ -77,7 +80,7 @@
       Last step is to send a confirmation code over SMS and redirect to code confirmation page.
 
       ** See Also: **
-      * [Bcript Ruby](https://github.com/codahale/bcrypt-ruby)
+      * [Bcrypt Ruby](https://github.com/codahale/bcrypt-ruby)
 
   .step(
     data-title='Verify phone ownership',
