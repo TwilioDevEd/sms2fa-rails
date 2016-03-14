@@ -14,7 +14,7 @@
 </div><div data-title="What does this thing do?" data-file="app/controllers/users_controller.rb" class="step"><h2 id="what-does-this-thing-do-">What does this thing do?</h2>
 <p>This Ruby on Rails application demonstrates how to use Twilio API to implement a Two-factor authentication process. This process should improve user identity validation accuracy by ensuring user&#39;s ownership of a device along with a password.</p>
 </div><div data-title="Create a new user" data-file="app/models/user.rb" class="step"><h2 id="create-a-new-user">Create a new user</h2>
-<p>The first thing we’ll need to do is create the user that will be authenticated within the system. To model that we create a <code>User</code> model. It will keep information such as:</p>
+<p>The first thing we’ll need to do is create the user that will be authenticated within the system. To model that we create a <code>User</code> model. It will keep information this way:</p>
 <ul>
 <li>password</li>
 <li>email that will be used as identifier</li>
@@ -22,8 +22,8 @@
 <li>boolean to check if phone number was already verified</li>
 </ul>
 </div><div data-title="Configuring Twilio Client" data-file="lib/message_sender.rb" class="step"><h2 id="configuring-twilio-client">Configuring Twilio Client</h2>
-<p>To send the confirmation SMS we need to create a Twilio REST API client that can be used to send SMS and MMS messages. The client requires your Twilio account credentials (an account SID and auth token), which can be found in the account portal.</p>
-<p>Next all we need to do is call <code>messages.create</code> on the client object in order to send our message. The Twilio Message API call requires a &#39;From&#39; and &#39;To&#39; parameter, and either a &#39;Body&#39; or a &#39;MediaUrl&#39; attribute (or both).</p>
+<p>To send the confirmation SMS we need to create a Twilio REST API client that can be used to send SMS and MMS messages. The client requires your Twilio account credentials (an account SID and auth token). They can be found in the account portal.</p>
+<p>Next we need to call <code>messages.create</code> on the client object in order to send our message. The Twilio Message API call requires a &#39;From&#39; and &#39;To&#39; parameter, and either a &#39;Body&#39; or a &#39;MediaUrl&#39; attribute (or both).</p>
 <p>These few lines of code are all you need to send an SMS in Rails.</p>
 <p><strong>See Also:</strong></p>
 <ul>
@@ -31,15 +31,16 @@
 <li><a href="//dockyard.com/blog/ruby/2012/02/14/love-your-lib-directory">Using the &quot;lib&quot; directory in Rails</a></li>
 </ul>
 </div><div data-title="Sending Verification Code" data-file="app/controllers/users_controller.rb" data-highlight="15-24" class="step"><h2 id="sending-verification-code">Sending Verification Code</h2>
-<p>In the controller&#39;s <code>create</code>method, <code>ConfirmationSender.send_confirmation_to</code> will send a 6-digit random code to the user&#39;s phone.<br>He will need to use it to confirm that the provided phone number is correct. Since at this point, we don’t have that confirmation yet, 
-we create the user but we don’t perform its authentication at that moment. We just redirect him to the page where he’ll be able to 
+<p>The controller&#39;s <code>create</code>method, <code>ConfirmationSender.send_confirmation_to</code> will send a 6-digit random code to the user&#39;s phone.
+He will need to use it to confirm that the provided phone number is correct. Since at this point, we don’t have that confirmation yet,
+we create the user but we don’t perform its authentication at that moment. We redirect him to the page where he’ll be able to
 input the validation code.</p>
 </div><div data-title="Confirm phone number" data-file="app/controllers/confirmations_controller.rb" data-highlight="6-18" class="step"><h2 id="confirm-phone-number">Confirm phone number</h2>
-<p>After the user has input the validation code, the system will check if the verification code provided by the user matches the one 
-that we have persisted. In the cases where it matches, we&#39;ll confirm the phone number using <code>user#confirm!</code>. After that we set the 
+<p>After the user has input the validation code, the system will check if the verification code provided by the user matches the one
+that we have persisted. If it matches we&#39;ll confirm the phone number using <code>user#confirm!</code>. After that we set the
 user’s authenticated session attribute to <code>true</code> and redirect him to the secret content.</p>
 </div><div data-title="Sign in with your new user" data-file="app/controllers/sessions_controller.rb" data-highlight="5-17" class="step"><h2 id="sign-in-with-your-new-user">Sign in with your new user</h2>
-<p>On the <em>sign in</em> page we call <code>@user.authenticate(params[:password])</code> to ask bcrypt to hash and validate the provided password against 
+<p>On the <em>sign in</em> page we call <code>@user.authenticate(params[:password])</code> to ask bcrypt to hash and validate the provided password against
 the persisted one. Since we haven’t finish the authentication process yet, we set <code>session[:authenticated] = false</code> to flag that
 this user is not authenticated yet.
 Last step is to send a confirmation code over SMS and redirect to code confirmation page.</p>
@@ -48,12 +49,12 @@ Last step is to send a confirmation code over SMS and redirect to code confirmat
 <li><a href="https://github.com/codahale/bcrypt-ruby">Bcrypt Ruby</a></li>
 </ul>
 </div><div data-title="Verify phone ownership" data-file="app/controllers/confirmations_controller.rb" data-highlight="6-18" class="step"><h2 id="verify-phone-ownership">Verify phone ownership</h2>
-<p>After sending the code, we need to make sure that user received it correctly and has his phone. We then ask him to input the code 
-and validate against the given one, which is a copy of what we have just sent.</p>
+<p>After sending the code, we need to make sure that user received it correctly and that he has his phone. We then ask him to input the code
+and validate it against the given one, which is a copy of what we have just sent.</p>
 </div><div data-title="Ensuring that content requires authentication" data-file="app/controllers/application_controller.rb" data-highlight="6-12" class="step"><h2 id="ensuring-that-content-requires-authentication">Ensuring that content requires authentication</h2>
-<p>In order to ensure that a user provided both factors (password and verification code) we check the session for <code>:user_id</code> and 
-<code>:authenticated</code> attributes. These session attributes are set during the password matchind and the SMS authentication processes.</p>
-<p>We added a <code>before_action</code> on the controller responsible for rendering authenticated content and that will guarantee that user is authorized for every request.</p>
+<p>In order to ensure that a user provided both factors (password and verification code) we check the session for <code>:user_id</code> and
+<code>:authenticated</code> attributes. These session attributes are set during the password matching and the SMS authentication processes.</p>
+<p>We added a <code>before_action</code> on the controller responsible for rendering authenticated content. This will guarantee that user is authorized for every request.</p>
 </div><div class="step"><h2 id="where-to-next-">Where to next?</h2>
 <p>That&#39;s it! We&#39;ve just implemented an SMS Two Factor Authenticated application. If you&#39;re a
 Rails developer working with Twilio, you might want to check out these other tutorials.</p>
