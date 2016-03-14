@@ -36,6 +36,10 @@ user’s authenticated session attribute to <code>true</code> and redirect him t
 the persisted one. Since we haven’t finish the authentication process yet, we set <code>session[:authenticated] = false</code> to flag that
 this user is not authenticated yet.
 Last step is to send a confirmation code over SMS and redirect to code confirmation page.</p>
+<p><strong> See Also: </strong></p>
+<ul>
+<li><a href="https://github.com/codahale/bcrypt-ruby">Bcript Ruby</a></li>
+</ul>
 </div><div data-title="Verify phone ownership" data-file="app/controllers/confirmations_controller.rb" data-highlight="6-18" class="step"><h2 id="verify-phone-ownership">Verify phone ownership</h2>
 <p>After sending the code, we need to make sure that user received it correctly and has his phone. We then ask him to input the code 
 and validate against the given one, which is a copy of what we have just sent.</p>
