@@ -1,129 +1,170 @@
-.chapter(data-title='Two Factor Authentication with Rails and Twilio')
-  .step(
-    data-title='Introduction: Security',
-    data-file='app/controllers/users_controller.rb')
-    :markdown
-     ## Security
+.step(
+  data-title='How it Works',
+  data-file='lib/confirmation_sender.rb')
+  :markdown
+    ## About this Application
 
-     Security is a main concern for an application these days. On this tutorial we'll show how to use Twilio API to build a “[Two Factor Authentication](https://en.wikipedia.org/wiki/Two-factor_authentication)” System.
+    This [Ruby on Rails](http://rubyonrails.org) application example
+    demonstrates how to implement two-factor authentication using Twilio.
 
-  .step(
-    data-title='What does this thing do?',
-    data-file='app/controllers/users_controller.rb')
-    :markdown
-     ## What does this thing do?
+    _To run this application yourself [download the code and follow the
+    instructions on GitHub](https://github.com/TwilioDevEd/sms2fa-rails)._
 
-     This Ruby on Rails application demonstrates how to use Twilio API to implement a Two-factor authentication process. This process should improve user identity validation accuracy by ensuring user's ownership of a device along with a password.
+    Adding two-factor authentication (2FA) to your web application increases the
+    security of your user's data. [Multi-factor
+    authentication](http://en.wikipedia.org/wiki/Multi-factor_authentication)
+    determines the identity of a user by validating once by logging into the
+    app, and then a second time with their mobile device using SMS.
 
-  .step(
-    data-title='Create a new user',
-    data-file='app/models/user.rb')
-    :markdown
-      ## Create a new user
+    For the second factor, we will validate that the user has their mobile phone
+    by sending them a **verification code** in a text message using your Twilio
+    Phone Number.
 
-      The first thing we’ll need to do is create the user that will be authenticated within the system. To model that we create a `User` model. It will keep information this way:
+    Let's get started!
 
-      * password
-      * email that will be used as identifier
-      * phone number that will be used to validate its authenticity
-      * boolean to check if phone number was already verified
+    ---
 
-  .step(
-    data-title='Configuring Twilio Client',
-    data-file='lib/message_sender.rb')
-    :markdown
-      ## Configuring Twilio Client
+    **See Also:**
 
-      To send the confirmation SMS we need to create a Twilio REST API client that can be used to send SMS and MMS messages. The client requires your Twilio account credentials (an account SID and auth token). They can be found in the account portal.
+    * [REST API: Sending SMS or MMS](//www.twilio.com/docs/api/rest/sending-messages)
 
-      Next we need to call `messages.create` on the client object in order to send our message. The Twilio Message API call requires a 'From' and 'To' parameter, and either a 'Body' or a 'MediaUrl' attribute (or both).
+.step(
+  data-title='Generating a Verification Code',
+  data-file='lib/code_generator.rb')
+  :markdown
+    ## Generating a Verification Code
 
-      These few lines of code are all you need to send an SMS in Rails.
+    The Ruby interface to generate pseudo-random number let us to easily
+    generate a _verification code_.
 
-      **See Also:**
-        * [Twilio SMS and MMS Quickstart](//www.twilio.com/docs/quickstart/ruby/sms/sending-via-rest)
-        * [Using the "lib" directory in Rails](//dockyard.com/blog/ruby/2012/02/14/love-your-lib-directory)
+    To generate our _verification code_ we use `Random#rand` which can take a
+    _range_ as an argument. Considering the current implementation our _6-digits
+    verification code_ could be any number between **100,000** and **999,999**.
 
-  .step(
-    data-title='Sending Verification Code',
-    data-file='app/controllers/users_controller.rb'
-    data-highlight='15-24')
-    :markdown
-      ## Sending Verification Code
+    Probably you are wondering how to send a text message with the _verification
+    code_ we generated. Let's see how to send text messages with Twilio.
 
-      The controller's `create`method, `ConfirmationSender.send_confirmation_to` will send a 6-digit random code to the user's phone.
-      He will need to use it to confirm that the provided phone number is correct. Since at this point, we don’t have that confirmation yet,
-      we create the user but we don’t perform its authentication at that moment. We redirect him to the page where he’ll be able to
-      input the validation code.
+    ---
 
-  .step(
-    data-title='Confirm phone number',
-    data-file='app/controllers/confirmations_controller.rb'
-    data-highlight='6-18')
-    :markdown
-      ## Confirm phone number
+    **See Also:**
 
-      After the user has input the validation code, the system will check if the verification code provided by the user matches the one
-      that we have persisted. If it matches we'll confirm the phone number using `user#confirm!`. After that we set the
-      user’s authenticated session attribute to `true` and redirect him to the secret content.
+    * [Ruby Docs: Random](//ruby-doc.org/core-2.2.0/Random.html)
+    * [Ruby Docs: Range](//ruby-doc.org/core-2.2.0/Range.html)
 
-  .step(
-    data-title='Sign in with your new user',
-    data-file='app/controllers/sessions_controller.rb'
-    data-highlight='5-17')
-    :markdown
-      ## Sign in with your new user
+.step(
+  data-title='Sending a Verification Code',
+  data-file='lib/message_sender.rb',
+  data-highlight='3-5,7-11')
+  :markdown
+    ## Sending a Verification Code
 
-      On the _sign in_ page we call `@user.authenticate(params[:password])` to ask bcrypt to hash and validate the provided password against
-      the persisted one. Since we haven’t finish the authentication process yet, we set `session[:authenticated] = false` to flag that
-      this user is not authenticated yet.
-      Last step is to send a confirmation code over SMS and redirect to code confirmation page.
+    The Twilio helper library allows us to send a SMS in a concise manner.
 
-      ** See Also: **
-      * [Bcrypt Ruby](https://github.com/codahale/bcrypt-ruby)
+    First you have to create an instance of a **Twilio Client** with your
+    credentials. As you can see you can create a text message by calling the
+    method `create`.
 
-  .step(
-    data-title='Verify phone ownership',
-    data-file='app/controllers/confirmations_controller.rb'
-    data-highlight='6-18')
-    :markdown
-      ## Verify phone ownership
+    You can find your credentials at your [Twilio Account](//www.twilio.com/user/account/phone-numbers/incoming).
 
-      After sending the code, we need to make sure that user received it correctly and that he has his phone. We then ask him to input the code
-      and validate it against the given one, which is a copy of what we have just sent.
+    ---
 
-  .step(
-    data-title='Ensuring that content requires authentication',
-    data-file='app/controllers/application_controller.rb'
-    data-highlight='6-12')
-    :markdown
-      ## Ensuring that content requires authentication
+    **See Also:**
 
-      In order to ensure that a user provided both factors (password and verification code) we check the session for `:user_id` and
-      `:authenticated` attributes. These session attributes are set during the password matching and the SMS authentication processes.
+    * [Twilio Ruby Helper Library](//twilio-ruby.readthedocs.org/en/latest/)
+    * [Twilio: Sending a Text Message](//twilio-ruby.readthedocs.org/en/latest/usage/messages.html#sending-a-text-message)
 
-      We added a `before_action` on the controller responsible for rendering authenticated content. This will guarantee that user is authorized for every request.
 
-  .step
-    :markdown
-      ## Where to next?
+.step(
+  data-title='Registering a User',
+  data-file='app/controllers/users_controller.rb',
+  data-highlight='6,15-24')
+  :markdown
+    ## Registering a User
 
-      That's it! We've just implemented an SMS Two Factor Authenticated application. If you're a
-      Rails developer working with Twilio, you might want to check out these other tutorials.
+    When a **user** signs up for our website, we use this controller to handle
+    the operations related to the creation of the user in the database. As well
+    as sending them a _verification code_.
 
-      [**Workflow Automation**](//www.twilio.com/docs/tutorials/walkthrough/workflow-automation/ruby/rails)
+    In order to do two-factor authentication we need to make sure we ask for the
+    **phone number**.
 
-      Increase your rate of response by automating the workflows that are key
-      to your business. In this tutorial, learn how to build a ready-for-scale
-      automated SMS workflow, for a vacation rental company.
+    Let's see how we implemented the `send_confirmation_to` method.
 
-      [**Masked Numbers**](//www.twilio.com/docs/tutorials/walkthrough/masked-numbers/ruby/rails)
+    ---
 
-      Protect your users' privacy by anonymously connecting them with Twilio
-      Voice and SMS. Learn how to create disposable phone numbers on-demand,
-      so two users can communicate without exchanging personal information.
+    **See Also:**
 
-      ### Did this help?
+    * [Getting Started with Rails](//guides.rubyonrails.org/getting_started.html)
 
-      Thanks for checking out this tutorial! If you have any feedback
-      to share with us, we'd love to hear it. [Contact support](//www.twilio.com/help/contact) to let us know what you think.
+.step(
+  data-title='Gluing All Together',
+  data-file='lib/confirmation_sender.rb')
+  :markdown
+    ## Gluing All Together
+
+    Using the building blocks we created in the previous steps we need a place
+    to generate _verification code_ and then send out the text message to the
+    user.
+
+    You can see an intermediate step which is to update the user with the
+    _verification code_. This _verification code_ will be used for
+    authentication purposes.
+
+    Let's take a look on how to implement the actual 2-Step verification.
+
+    ---
+
+    **See Also:**
+
+    * [Using Services to Keep Your Rails Controllers Clean and DRY](//blog.engineyard.com/2014/keeping-your-rails-controllers-dry-with-services)
+
+.step(
+  data-title='Implementing the 2-Step Verification',
+  data-file='app/controllers/confirmations_controller.rb',
+  data-highlight='6-18')
+  :markdown
+    ## Implementing the 2-Step Verification
+
+    When the **user** receives a SMS with the _verification code_ we need to
+    ensure the given code is valid.
+
+    This validation is achieved by comparing the user's **verification code**
+    with the _verification code_ the user input in the form.
+
+    ![Confirm Verification Code](http://howtodocs.s3.amazonaws.com/sms-2fa-authentication.png)
+
+    If the validation was successful the application allow the user to get
+    access to the protected content. Otherwise the application will prompt for
+    the _verification code_ once again.
+
+    ---
+
+    **See Also:**
+
+    * [Ruby on Rails Security Guide](//guides.rubyonrails.org/security.html)
+    * [Action Controller Overview: Parameters](//guides.rubyonrails.org/action_controller_overview.html#parameters)
+
+.step
+  :markdown
+    ## Where to next?
+
+    That's it! We've just implemented an SMS Two-Factor Authenticated
+    application. If you're a Rails developer working with Twilio, you might want
+    to check out these other tutorials.
+
+    [**Workflow Automation**](//www.twilio.com/docs/tutorials/walkthrough/workflow-automation/ruby/rails)
+
+    Increase your rate of response by automating the workflows that are key
+    to your business. In this tutorial, learn how to build a ready-for-scale
+    automated SMS workflow, for a vacation rental company.
+
+    [**Masked Numbers**](//www.twilio.com/docs/tutorials/walkthrough/masked-numbers/ruby/rails)
+
+    Protect your users' privacy by anonymously connecting them with Twilio
+    Voice and SMS. Learn how to create disposable phone numbers on-demand,
+    so two users can communicate without exchanging personal information.
+
+    ### Did this help?
+
+    Thanks for checking out this tutorial! If you have any feedback
+    to share with us, we'd love to hear it. [Contact support](//www.twilio.com/help/contact) to let us know what you think.
