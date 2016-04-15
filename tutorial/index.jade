@@ -5,7 +5,7 @@
     ## About this Application
 
     This [Ruby on Rails](http://rubyonrails.org) application example
-    demonstrates how to implement two-factor authentication using Twilio.
+    demonstrates how to implement an SMS two-factor authentication using Twilio.
 
     _To run this application yourself [download the code and follow the
     instructions on GitHub](https://github.com/TwilioDevEd/sms2fa-rails)._
@@ -13,12 +13,9 @@
     Adding two-factor authentication (2FA) to your web application increases the
     security of your user's data. [Multi-factor
     authentication](http://en.wikipedia.org/wiki/Multi-factor_authentication)
-    determines the identity of a user by validating once by logging into the
-    app, and then a second time with their mobile device using SMS.
-
-    For the second factor, we will validate that the user has their mobile phone
-    by sending them a **verification code** in a text message using your Twilio
-    Phone Number.
+    determines the identity of a user in two steps. The first being validation by logging
+    into the app, and the second validation would be through their mobile devices using
+    an SMS one time **verification code**.
 
     Let's get started!
 
@@ -34,14 +31,14 @@
   :markdown
     ## Generating a Verification Code
 
-    The Ruby interface to generate pseudo-random number let us to easily
+    The Ruby interface used to generate pseudo-random number let us to easily
     generate a _verification code_.
 
     To generate our _verification code_ we use `Random#rand` which can take a
     _range_ as an argument. Considering the current implementation our _6-digits
     verification code_ could be any number between **100,000** and **999,999**.
 
-    Probably you are wondering how to send a text message with the _verification
+    You are probably wondering how to send a text message with the _verification
     code_ we generated. Let's see how to send text messages with Twilio.
 
     ---
@@ -58,7 +55,7 @@
   :markdown
     ## Sending a Verification Code
 
-    The Twilio helper library allows us to send a SMS in a concise manner.
+    The Twilio helper library allows us to send an SMS concisely.
 
     First you have to create an instance of a **Twilio Client** with your
     credentials. As you can see you can create a text message by calling the
@@ -82,11 +79,11 @@
     ## Registering a User
 
     When a **user** signs up for our website, we use this controller to handle
-    the operations related to the creation of the user in the database. As well
+    the operations related to the creation of the user in the database, as well
     as sending them a _verification code_.
 
     In order to do two-factor authentication we need to make sure we ask for the
-    **phone number**.
+    user's **phone number**.
 
     Let's see how we implemented the `send_confirmation_to` method.
 
@@ -97,16 +94,16 @@
     * [Getting Started with Rails](//guides.rubyonrails.org/getting_started.html)
 
 .step(
-  data-title='Gluing All Together',
+  data-title='Putting It All Together',
   data-file='lib/confirmation_sender.rb')
   :markdown
-    ## Gluing All Together
+    ## Putting It All Together
 
-    Using the building blocks we created in the previous steps we need a place
-    to generate _verification code_ and then send out the text message to the
+    Using the building blocks we've created in the previous steps we need a place
+    to generate a _verification code_ and then send it out to the
     user.
 
-    You can see an intermediate step which is to update the user with the
+    There is an intermediate step where you update the user with the
     _verification code_. This _verification code_ will be used for
     authentication purposes.
 
@@ -125,15 +122,15 @@
   :markdown
     ## Implementing the 2-Step Verification
 
-    When the **user** receives a SMS with the _verification code_ we need to
+    When the **user** receives an SMS with the _verification code_ we need to
     ensure the given code is valid.
 
     This validation is achieved by comparing the user's **verification code**
-    with the _verification code_ the user input in the form.
+    with the _verification code_ the user inputs on the form.
 
     ![Confirm Verification Code](http://howtodocs.s3.amazonaws.com/sms-2fa-authentication.png)
 
-    If the validation was successful the application allow the user to get
+    If the validation was successful the application allows the user to have
     access to the protected content. Otherwise the application will prompt for
     the _verification code_ once again.
 
@@ -167,4 +164,4 @@
     ### Did this help?
 
     Thanks for checking out this tutorial! If you have any feedback
-    to share with us, we'd love to hear it. [Contact support](//www.twilio.com/help/contact) to let us know what you think.
+    to share with us, we'd love to hear it. [Contact the Twilio Developer Education Team](mailto:deved-oss@twilio.com) to let us know what you think.
