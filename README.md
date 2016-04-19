@@ -49,7 +49,7 @@ This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
 1. Run the server
 
    ```
-   rails s
+   bundle exec rails s
    ```
 
 1. Check it out at [http://localhost:3000](http://localhost:3000)
