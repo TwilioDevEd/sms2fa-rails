@@ -13,9 +13,15 @@
     Adding two-factor authentication (2FA) to your web application increases the
     security of your user's data. [Multi-factor
     authentication](http://en.wikipedia.org/wiki/Multi-factor_authentication)
-    determines the identity of a user in two steps. The first being validation by logging
-    into the app, and the second validation would be through their mobile devices using
-    an SMS one time **verification code**.
+    determines the identity of a user in two steps: 
+
+    1. First we validate the user with an email and password
+
+    2. Second, we validate using a mobile device, by sending them a one-time **verification code**.
+
+    Once our user enters the verification code, we know they have received the SMS, and indeed are who they say they are. This is a standard SMS implementation.
+
+    For a slightly more advanced implementation using [Authy](https://www.twilio.com/authy) One-Touch checkout this [tutorial](/docs/tutorials/walkthrough/two-factor-authentication/ruby/rails).
 
     Let's get started!
 
@@ -31,15 +37,13 @@
   :markdown
     ## Generating a Verification Code
 
-    The Ruby interface used to generate pseudo-random number let us to easily
-    generate a _verification code_.
+    Once our user logs in we need to send them a _verification code_.
 
     To generate our _verification code_ we use `Random#rand` which can take a
-    _range_ as an argument. Considering the current implementation our _6-digits
-    verification code_ could be any number between **100,000** and **999,999**.
+    _range_ as an argument. Considering the current implementation our _6-digit
+    verification code_ could be any number between **100000** and **999999**.
 
-    You are probably wondering how to send a text message with the _verification
-    code_ we generated. Let's see how to send text messages with Twilio.
+    Next let's look at how we would send this in an SMS with Twilio.
 
     ---
 
@@ -55,11 +59,10 @@
   :markdown
     ## Sending a Verification Code
 
-    The Twilio helper library allows us to send an SMS concisely.
+    The Twilio helper library allows us to easily send an SMS.
 
-    First you have to create an instance of a **Twilio Client** with your
-    credentials. As you can see you can create a text message by calling the
-    method `create`.
+    First we have to create an instance of a **Twilio Client** with our
+    credentials. Now all we have to do to send an SMS using the REST API is to call `client.messages.create()` with the necessary parameters.
 
     You can find your credentials at your [Twilio Account](//www.twilio.com/user/account/phone-numbers/incoming).
 
@@ -78,9 +81,7 @@
   :markdown
     ## Registering a User
 
-    When a **user** signs up for our website, we use this controller to handle
-    the operations related to the creation of the user in the database, as well
-    as sending them a _verification code_.
+    When a **user** signs up for our website, this controller creates the **user** and sends them a _verification code_.
 
     In order to do two-factor authentication we need to make sure we ask for the
     user's **phone number**.
@@ -99,13 +100,9 @@
   :markdown
     ## Putting It All Together
 
-    Using the building blocks we've created in the previous steps we need a place
-    to generate a _verification code_ and then send it out to the
-    user.
+    Using the building blocks we've created in the previous steps we can now pull it all together.
 
-    There is an intermediate step where you update the user with the
-    _verification code_. This _verification code_ will be used for
-    authentication purposes.
+    Notice we update the user with the _verification code_ since we'll need to look it up to verify the user.
 
     Let's take a look on how to implement the actual 2-Step verification.
 
