@@ -23,6 +23,6 @@ group :test do
   gem 'rspec-activemodel-mocks'
   gem 'factory_girl_rails'
   gem 'vcr'
-  gem 'webmock'
+  gem 'fakeweb'
   gem 'coveralls', require: false
 end
