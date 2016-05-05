@@ -17,9 +17,15 @@ instructions on GitHub</a>.</em></p>
 <p>Adding two-factor authentication (2FA) to your web application increases the
 security of your user&#39;s data. <a href="http://en.wikipedia.org/wiki/Multi-factor_authentication">Multi-factor
 authentication</a>
-determines the identity of a user in two steps. The first being validation by logging
-into the app, and the second validation would be through their mobile devices using
-an SMS one time <strong>verification code</strong>.</p>
+determines the identity of a user in two steps: </p>
+<ol>
+<li><p>First we validate the user with an email and password</p>
+</li>
+<li><p>Second, we validate using a mobile device, by sending them a one-time <strong>verification code</strong>.</p>
+</li>
+</ol>
+<p>Once our user enters the verification code, we know they have received the SMS, and indeed are who they say they are. This is a standard SMS implementation.</p>
+<p>For a slightly more advanced implementation using <a href="https://www.twilio.com/authy">Authy</a> One-Touch checkout this <a href="/docs/tutorials/walkthrough/two-factor-authentication/ruby/rails">tutorial</a>.</p>
 <p>Let&#39;s get started!</p>
 <hr>
 <p><strong>See Also:</strong></p>
@@ -27,13 +33,11 @@ an SMS one time <strong>verification code</strong>.</p>
 <li><a href="//www.twilio.com/docs/api/rest/sending-messages">REST API: Sending SMS or MMS</a></li>
 </ul>
 </div><div data-title="Generating a Verification Code" data-file="lib/code_generator.rb" class="step"><h2 id="generating-a-verification-code">Generating a Verification Code</h2>
-<p>The Ruby interface used to generate pseudo-random number let us to easily
-generate a <em>verification code</em>.</p>
+<p>Once our user logs in we need to send them a <em>verification code</em>.</p>
 <p>To generate our <em>verification code</em> we use <code>Random#rand</code> which can take a
-<em>range</em> as an argument. Considering the current implementation our <em>6-digits
-verification code</em> could be any number between <strong>100,000</strong> and <strong>999,999</strong>.</p>
-<p>You are probably wondering how to send a text message with the <em>verification
-code</em> we generated. Let&#39;s see how to send text messages with Twilio.</p>
+<em>range</em> as an argument. Considering the current implementation our <em>6-digit
+verification code</em> could be any number between <strong>100000</strong> and <strong>999999</strong>.</p>
+<p>Next let&#39;s look at how we would send this in an SMS with Twilio.</p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
@@ -41,10 +45,9 @@ code</em> we generated. Let&#39;s see how to send text messages with Twilio.</p>
 <li><a href="//ruby-doc.org/core-2.2.0/Range.html">Ruby Docs: Range</a></li>
 </ul>
 </div><div data-title="Sending a Verification Code" data-file="lib/message_sender.rb" data-highlight="3-5,7-11" class="step"><h2 id="sending-a-verification-code">Sending a Verification Code</h2>
-<p>The Twilio helper library allows us to send an SMS concisely.</p>
-<p>First you have to create an instance of a <strong>Twilio Client</strong> with your
-credentials. As you can see you can create a text message by calling the
-method <code>create</code>.</p>
+<p>The Twilio helper library allows us to easily send an SMS.</p>
+<p>First we have to create an instance of a <strong>Twilio Client</strong> with our
+credentials. Now all we have to do to send an SMS using the REST API is to call <code>client.messages.create()</code> with the necessary parameters.</p>
 <p>You can find your credentials at your <a href="//www.twilio.com/user/account/phone-numbers/incoming">Twilio Account</a>.</p>
 <hr>
 <p><strong>See Also:</strong></p>
@@ -53,9 +56,7 @@ method <code>create</code>.</p>
 <li><a href="//twilio-ruby.readthedocs.org/en/latest/usage/messages.html#sending-a-text-message">Twilio: Sending a Text Message</a></li>
 </ul>
 </div><div data-title="Registering a User" data-file="app/controllers/users_controller.rb" data-highlight="6,15-24" class="step"><h2 id="registering-a-user">Registering a User</h2>
-<p>When a <strong>user</strong> signs up for our website, we use this controller to handle
-the operations related to the creation of the user in the database, as well
-as sending them a <em>verification code</em>.</p>
+<p>When a <strong>user</strong> signs up for our website, this controller creates the <strong>user</strong> and sends them a <em>verification code</em>.</p>
 <p>In order to do two-factor authentication we need to make sure we ask for the
 user&#39;s <strong>phone number</strong>.</p>
 <p>Let&#39;s see how we implemented the <code>send_confirmation_to</code> method.</p>
@@ -65,12 +66,8 @@ user&#39;s <strong>phone number</strong>.</p>
 <li><a href="//guides.rubyonrails.org/getting_started.html">Getting Started with Rails</a></li>
 </ul>
 </div><div data-title="Putting It All Together" data-file="lib/confirmation_sender.rb" class="step"><h2 id="putting-it-all-together">Putting It All Together</h2>
-<p>Using the building blocks we&#39;ve created in the previous steps we need a place
-to generate a <em>verification code</em> and then send it out to the
-user.</p>
-<p>There is an intermediate step where you update the user with the
-<em>verification code</em>. This <em>verification code</em> will be used for
-authentication purposes.</p>
+<p>Using the building blocks we&#39;ve created in the previous steps we can now pull it all together.</p>
+<p>Notice we update the user with the <em>verification code</em> since we&#39;ll need to look it up to verify the user.</p>
 <p>Let&#39;s take a look on how to implement the actual 2-Step verification.</p>
 <hr>
 <p><strong>See Also:</strong></p>
@@ -114,4 +111,4 @@ to share with us, we&#39;d love to hear it. <a href="mailto:deved-oss@twilio.com
 <textarea class="saurus-file" data-file="app/controllers/users_controller.rb" data-mode="ruby">Y2xhc3MgVXNlcnNDb250cm9sbGVyIDwgQXBwbGljYXRpb25Db250cm9sbGVyCiAgQVRUUklCVVRFX1dISVRFTElTVCA9IFsKICAgIDpmaXJzdF9uYW1lLAogICAgOmxhc3RfbmFtZSwKICAgIDplbWFpbCwKICAgIDpwaG9uZV9udW1iZXIsCiAgICA6cGFzc3dvcmRfY29uZmlybWF0aW9uLAogICAgOnBhc3N3b3JkCiAgXQoKICBkZWYgbmV3CiAgICBAdXNlciA9IFVzZXIubmV3CiAgZW5kCgogIGRlZiBjcmVhdGUKICAgIEB1c2VyID0gVXNlci5uZXcodXNlcl9wYXJhbXMpCiAgICBpZiBAdXNlci5zYXZlCiAgICAgIHNlc3Npb25bOnVzZXJfaWRdID0gQHVzZXIuaWQKICAgICAgQ29uZmlybWF0aW9uU2VuZGVyLnNlbmRfY29uZmlybWF0aW9uX3RvKEB1c2VyKQogICAgICByZWRpcmVjdF90byBuZXdfY29uZmlybWF0aW9uX3BhdGgKICAgIGVsc2UKICAgICAgcmVuZGVyIDpuZXcKICAgIGVuZAogIGVuZAoKICBwcml2YXRlCgogIGRlZiB1c2VyX3BhcmFtcwogICAgcGFyYW1zLnJlcXVpcmUoOnVzZXIpLnBlcm1pdCgqQVRUUklCVVRFX1dISVRFTElTVCkKICBlbmQKZW5kCg==</textarea>
 <textarea class="saurus-file" data-file="app/controllers/confirmations_controller.rb" data-mode="ruby">Y2xhc3MgQ29uZmlybWF0aW9uc0NvbnRyb2xsZXIgPCBBcHBsaWNhdGlvbkNvbnRyb2xsZXIKICBkZWYgbmV3CiAgICBAdXNlciA9IFVzZXIuZmluZChzZXNzaW9uWzp1c2VyX2lkXSkKICBlbmQKCiAgZGVmIGNyZWF0ZQogICAgQHVzZXIgPSBVc2VyLmZpbmQgcGFyYW1zWzp1c2VyX2lkXQogICAgaWYgQHVzZXIudmVyaWZpY2F0aW9uX2NvZGUgPT0gcGFyYW1zWzp2ZXJpZmljYXRpb25fY29kZV0KICAgICAgQHVzZXIuY29uZmlybSEKICAgICAgc2Vzc2lvbls6YXV0aGVudGljYXRlZF0gPSB0cnVlCgogICAgICBmbGFzaFs6bm90aWNlXSA9ICJXZWxjb21lICN7QHVzZXIuZmlyc3RfbmFtZX0uIFRoZSBBZHZlbnR1cmUgQmVnaW5zISIKICAgICAgcmVkaXJlY3RfdG8gc2VjcmV0c19wYXRoCiAgICBlbHNlCiAgICAgIGZsYXNoLm5vd1s6ZXJyb3JdID0gIlZlcmlmaWNhdGlvbiBjb2RlIGlzIGluY29ycmVjdC4iCiAgICAgIHJlbmRlciA6bmV3CiAgICBlbmQKICBlbmQKZW5kCg==</textarea>
 </div>
-</div><div class="saurus-overview"><ul></ul></div></div><div class="saurus-code"><div class="file-path"><span class="crumb-container"></span><i class="fa fa-fw fa-folder"></i></div><div class="saurus-editor"></div></div><div class="saurus-explorer"><div class="saurus-file-list"></div><a href="https://github.com/TwilioDevEd/authy2fa-servlets" target="_blank" class="explorer-get-code"> <i class="fa fa-lg fa-github-square"> </i>View Code on GitHub</a></div></div></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script><script src="ace/ace.js"></script><script src="ace/theme-monokai.js"></script><script src="viewsaurus.js"></script></body></html>
+</div><div class="saurus-overview"><ul></ul></div></div><div class="saurus-code"><div class="file-path"><span class="crumb-container"></span><i class="fa fa-fw fa-folder"></i></div><div class="saurus-editor"></div></div><div class="saurus-explorer"><div class="saurus-file-list"></div><a href="https://github.com/TwilioDevEd/sms2fa-rails" target="_blank" class="explorer-get-code"> <i class="fa fa-lg fa-github-square"> </i>View Code on GitHub</a></div></div></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script><script src="ace/ace.js"></script><script src="ace/theme-monokai.js"></script><script src="viewsaurus.js"></script></body></html>
