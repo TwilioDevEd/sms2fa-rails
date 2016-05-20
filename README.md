@@ -1,6 +1,10 @@
 # SMS Two Factor Authentication with Ruby on Rails and Twilio
 
-SMS Two Factor Authentication implementation with Ruby on Rails and Twilio
+An example application implementing SMS Two Factor Authentication using Twilio.
+
+
+[Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/sms-two-factor-authentication/ruby/rails)!
+
 
 [![Build Status](https://travis-ci.org/TwilioDevEd/sms2fa-rails.svg?branch=master)](https://travis-ci.org/TwilioDevEd/sms2fa-rails)
 [![Coverage Status](https://coveralls.io/repos/github/TwilioDevEd/sms2fa-rails/badge.svg?branch=master)](https://coveralls.io/github/TwilioDevEd/sms2fa-rails?branch=master)
