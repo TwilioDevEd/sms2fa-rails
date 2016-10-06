@@ -1,3 +1,7 @@
+<a href="https://www.twilio.com">
+  <img src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg" alt="Twilio" width="250" />
+</a>
+
 # SMS Two Factor Authentication with Ruby on Rails and Twilio
 
 An example application implementing SMS Two Factor Authentication using Twilio.
@@ -54,8 +58,6 @@ This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
    ```
 
 1. Check it out at [http://localhost:3000](http://localhost:3000).
-
-That's it!
 
 ## Meta
 
