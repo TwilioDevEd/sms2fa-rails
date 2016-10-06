@@ -26,15 +26,11 @@ This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
    $ bundle install
    ```
 
-1. Export the environment variables.
+1. Copy the `.env.example` file to `.env`, and edit it including your credentials
+   for the Twilio API (found at https://www.twilio.com/console/account/settings). You
+   will also need a [Twilio Number](https://www.twilio.com/console/phone-numbers/incoming).
 
-   You can find the **AccountSID** and the **AuthToken** at https://www.twilio.com/user/account/settings.
-
-   ```bash
-   $ export TWILIO_ACCOUNT_SID=Your Twilio Account SID
-   $ export TWILIO_AUTH_TOKEN=Your Twilio Auth Token
-   $ export TWILIO_NUMBER=Your Twilio Phone Number
-   ```
+   Run `source .env` to export the environment variables.
 
 1. Create database and run migrations.
 
