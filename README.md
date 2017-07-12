@@ -20,14 +20,14 @@ This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
 1. First clone this repository and `cd` into it.
 
    ```bash
-   $ git clone git@github.com:TwilioDevEd/sms2fa-rails.git
-   $ cd sms2fa-rails
+   git clone git@github.com:TwilioDevEd/sms2fa-rails.git
+   cd sms2fa-rails
    ```
 
 1. Install the dependencies.
 
    ```bash
-   $ bundle install
+   bundle install
    ```
 
 1. Copy the `.env.example` file to `.env`, and edit it including your credentials
@@ -42,19 +42,19 @@ This project is built using [Ruby on Rails](http://rubyonrails.org/) Framework.
    a Mac, I recommend [Postgres.app](http://postgresapp.com)_.
 
    ```bash
-   $ bundle exec rake db:setup
+   bundle exec rake db:setup
    ```
 
 1. Make sure the tests succeed.
 
    ```bash
-   $ bundle exec rspec
+   bundle exec rspec
    ```
 
 1. Start the server.
 
    ```bash
-   $ bundle exec rails s
+   bundle exec rails s
    ```
 
 1. Check it out at [http://localhost:3000](http://localhost:3000).

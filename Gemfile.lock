@@ -191,7 +191,7 @@ GEM
     turbolinks (5.0.1)
       turbolinks-source (~> 5)
     turbolinks-source (5.0.0)
-    twilio-ruby (5.0.0.rc23)
+    twilio-ruby (5.0.0.rc26)
       faraday (~> 0.9)
       jwt (~> 1.5)
       libxml-ruby (= 3.0.0)
@@ -221,7 +221,7 @@ DEPENDENCIES
   rspec-rails
   sass-rails (~> 5.0)
   turbolinks
-  twilio-ruby (~> 5.0.0.rc23)
+  twilio-ruby (~> 5.0.0.rc26)
   uglifier (>= 1.3.0)
   vcr
 
