@@ -1,3 +1,5 @@
+> :exclamation: This tutorial is deprecated, please refer to the [new version](https://github.com/TwilioDevEd/verify-v2-quickstart-rails)
+
 <a href="https://www.twilio.com">
   <img src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg" alt="Twilio" width="250" />
 </a>
