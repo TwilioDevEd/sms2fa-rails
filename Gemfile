@@ -17,7 +17,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'twilio-ruby', '>= 5.0.0'
 gem 'bigdecimal', '1.3.5'
-gem 'loofah', '~>2.19.1'
+gem 'loofah', '~> 2.20.0'
 
 group :test do
   gem 'byebug'
