@@ -10,7 +10,7 @@ describe SessionsController do
           .to receive(:send_confirmation_to)
           .with(user)
 
-        post :create, { email: user.email, password: user.password }
+        post :create, params: { email: user.email, password: user.password }
       end
 
       it 'creates a user' do
@@ -35,7 +35,7 @@ describe SessionsController do
           .to receive(:send_confirmation_to)
           .with(user)
 
-        post :create, { email: user.email, password: 'wrong_password' }
+        post :create, params: { email: user.email, password: 'wrong_password' }
 
         expect(response).to render_template(:new)
       end
@@ -44,7 +44,7 @@ describe SessionsController do
 
   describe "#destroy" do
     it "destroys the session" do
-      get :destroy, nil, { user_id: 404, authenticated: true }
+      get :destroy, params: { user_id: 404, authenticated: true }
 
       expect(session[:user_id]).to be nil
       expect(session[:authenticated]).to be nil

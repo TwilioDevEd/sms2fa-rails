@@ -17,7 +17,7 @@ describe UsersController do
     context 'when required information is complete' do
       before do
         allow(ConfirmationSender).to receive(:send_confirmation_to)
-        post :create, user: attributes_for(:user)
+        post :create, params:{ user: attributes_for(:user)}
       end
 
       it 'creates a user' do
@@ -41,7 +41,7 @@ describe UsersController do
 
     context 'when required information is incomplete' do
       before do
-        post :create, user: attributes_for(:user).except(:email)
+        post :create, params: { user: attributes_for(:user).except(:email) }
       end
 
       it 'do not create a user' do
