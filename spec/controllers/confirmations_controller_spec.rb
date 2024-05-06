@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-describe ConfirmationsController do
+shared_examples ConfirmationsController do
   let(:user) { create(:user, verification_code: '110294') }
 
   describe '#new' do
-    before { get :new, nil, user_id: user.id }
-
+    before get :new, params: {user_id: user.id }
+    
     it 'renders new template' do
       expect(response).to render_template(:new)
     end
